@@ -1,0 +1,172 @@
+# ===== NISR Rwanda Analytics Platform Environment Configuration =====
+
+# ===== Application Settings =====
+APP_NAME="NISR Rwanda Analytics Platform"
+APP_VERSION="1.0.0"
+DEBUG=false
+LOG_LEVEL="INFO"
+ENVIRONMENT="production"
+
+# ===== Server Configuration =====
+HOST="0.0.0.0"
+PORT=8000
+WORKERS=4
+RELOAD=false
+
+# ===== Database Configuration =====
+# PostgreSQL (Recommended for production)
+DATABASE_URL="postgresql://username:password@localhost:5432/nisr_analytics"
+DATABASE_HOST="localhost"
+DATABASE_PORT=5432
+DATABASE_NAME="nisr_analytics"
+DATABASE_USER="nisr_user"
+DATABASE_PASSWORD="your_secure_password"
+DATABASE_ECHO=false
+
+# Alternative: SQLite for development
+# DATABASE_URL="sqlite:///./nisr_analytics.db"
+
+# ===== Redis Configuration (for caching and sessions) =====
+REDIS_URL="redis://localhost:6379"
+REDIS_HOST="localhost"
+REDIS_PORT=6379
+REDIS_PASSWORD=""
+REDIS_DB=0
+
+# ===== Security Settings =====
+SECRET_KEY="your-super-secret-key-change-this-in-production"
+JWT_SECRET="your-jwt-secret-key"
+JWT_ALGORITHM="HS256"
+JWT_EXPIRATION=86400
+ENCRYPTION_KEY="your-encryption-key-32-chars-long"
+
+# ===== File Storage Configuration =====
+# Local storage
+UPLOAD_DIR="./data/uploads"
+PROCESSED_DIR="./data/processed"
+MODELS_DIR="./data/models"
+REPORTS_DIR="./data/reports"
+TEMP_DIR="./data/temp"
+
+# Cloud storage (AWS S3)
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+AWS_REGION="eu-west-1"
+AWS_S3_BUCKET="nisr-analytics-data"
+
+# Azure Blob Storage
+AZURE_STORAGE_CONNECTION_STRING=""
+AZURE_CONTAINER_NAME="nisr-data"
+
+# ===== File Upload Limits =====
+MAX_FILE_SIZE=104857600  # 100MB in bytes
+ALLOWED_EXTENSIONS=csv,xlsx,xls,json,parquet,tsv,txt
+MAX_TRAINING_TIME=7200  # 2 hours in seconds
+
+# ===== AI/ML Configuration =====
+# OpenAI API
+OPENAI_API_KEY=""
+OPENAI_MODEL="gpt-4"
+OPENAI_MAX_TOKENS=4096
+
+# Hugging Face
+HUGGINGFACE_API_KEY=""
+HUGGINGFACE_MODEL="microsoft/DialoGPT-medium"
+
+# AutoML Settings
+AUTOML_TIME_LIMIT=3600  # 1 hour
+AUTOML_MAX_MODELS=50
+ENABLE_GPU=false
+GPU_MEMORY_LIMIT=8192  # MB
+
+# ===== Email Configuration =====
+SMTP_SERVER="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USERNAME=""
+SMTP_PASSWORD=""
+SMTP_TLS=true
+EMAIL_FROM="noreply@nisr.gov.rw"
+
+# ===== Monitoring & Analytics =====
+SENTRY_DSN=""
+GOOGLE_ANALYTICS_ID=""
+MIXPANEL_TOKEN=""
+
+# ===== External APIs =====
+# Rwanda National Bank API
+BNR_API_KEY=""
+BNR_API_URL="https://www.bnr.rw/statistics/"
+
+# World Bank API
+WORLD_BANK_API_URL="https://api.worldbank.org/v2/"
+
+# UN Data API
+UN_DATA_API_KEY=""
+
+# ===== NISR Specific Settings =====
+# Department configurations
+ENABLE_CENSUS_MODULE=true
+ENABLE_ECONOMIC_MODULE=true
+ENABLE_HEALTH_MODULE=true
+ENABLE_EDUCATION_MODULE=true
+ENABLE_AGRICULTURE_MODULE=true
+
+# Data validation rules
+VALIDATE_GEOGRAPHIC_CODES=true
+RWANDA_PROVINCES="Kigali,Eastern,Northern,Southern,Western"
+RWANDA_DISTRICTS_COUNT=30
+
+# Survey configurations
+DHS_API_KEY=""
+LSMS_DATA_ACCESS=true
+
+# ===== Feature Flags =====
+ENABLE_REAL_TIME_MONITORING=true
+ENABLE_ADVANCED_VISUALIZATIONS=true
+ENABLE_AUTOMATED_REPORTS=true
+ENABLE_ML_PREDICTIONS=true
+ENABLE_DATA_QUALITY_CHECKS=true
+ENABLE_USER_ANALYTICS=true
+
+# ===== Performance Settings =====
+WORKER_MEMORY_LIMIT=2048  # MB
+CACHE_TTL=3600  # 1 hour
+MAX_CONCURRENT_JOBS=5
+BACKGROUND_TASK_TIMEOUT=1800  # 30 minutes
+
+# ===== Development Settings =====
+ENABLE_DEBUG_TOOLBAR=false
+ENABLE_PROFILER=false
+LOG_SQL_QUERIES=false
+MOCK_EXTERNAL_APIS=false
+
+# ===== Backup Configuration =====
+BACKUP_ENABLED=true
+BACKUP_INTERVAL=86400  # Daily in seconds
+BACKUP_RETENTION=30  # Days
+BACKUP_STORAGE="local"  # local, s3, azure
+BACKUP_ENCRYPTION=true
+
+# ===== Compliance & Security =====
+ENABLE_AUDIT_LOGGING=true
+DATA_RETENTION_DAYS=2555  # 7 years
+ENABLE_DATA_ANONYMIZATION=true
+GDPR_COMPLIANCE=true
+PII_DETECTION=true
+
+# ===== Notification Settings =====
+SLACK_WEBHOOK_URL=""
+TEAMS_WEBHOOK_URL=""
+ENABLE_EMAIL_ALERTS=true
+ENABLE_SMS_ALERTS=false
+
+# ===== Custom Rwanda Settings =====
+TIMEZONE="Africa/Kigali"
+CURRENCY="RWF"
+LANGUAGE="en"
+LOCALE="rw_RW"
+
+# Default administrative units
+DEFAULT_PROVINCE="Kigali"
+DEFAULT_DISTRICT="Gasabo"
+DEFAULT_SECTOR="Kimisagara"

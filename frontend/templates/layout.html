@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NISR Rwanda Data Analytics Platform{% endblock %}</title>
+    
+    <!-- Enhanced CSS -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/components.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/advanced.css">
+    <link rel="stylesheet" href="/static/css/sidebar.css">
+    
+    <!-- External Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <!-- Particles.js for background animation -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Professional Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-network"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-title">NISR</div>
+                    <div class="logo-subtitle">Analytics</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-content">
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt nav-icon"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#data-upload" class="nav-link" data-section="data-upload">
+                                <i class="fas fa-cloud-upload-alt nav-icon"></i>
+                                <span class="nav-text">Data Upload</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#datasets" class="nav-link" data-section="datasets">
+                                <i class="fas fa-database nav-icon"></i>
+                                <span class="nav-text">Datasets</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#analysis" class="nav-link" data-section="analysis">
+                                <i class="fas fa-chart-bar nav-icon"></i>
+                                <span class="nav-text">Analysis</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#ai-lab" class="nav-link" data-section="ai-lab">
+                                <i class="fas fa-robot nav-icon"></i>
+                                <span class="nav-text">AI Lab</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#automl" class="nav-link" data-section="automl">
+                                <i class="fas fa-brain nav-icon"></i>
+                                <span class="nav-text">AutoML</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#predictions" class="nav-link" data-section="predictions">
+                                <i class="fas fa-crystal-ball nav-icon"></i>
+                                <span class="nav-text">Predictions</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Visualization</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#visualizations" class="nav-link" data-section="visualizations">
+                                <i class="fas fa-chart-area nav-icon"></i>
+                                <span class="nav-text">Viz Studio</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#dashboards" class="nav-link" data-section="dashboards">
+                                <i class="fas fa-th-large nav-icon"></i>
+                                <span class="nav-text">Dashboards</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#reports" class="nav-link" data-section="reports">
+                                <i class="fas fa-file-invoice nav-icon"></i>
+                                <span class="nav-text">Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Real-time</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#real-time" class="nav-link" data-section="real-time">
+                                <i class="fas fa-stream nav-icon"></i>
+                                <span class="nav-text">Live Monitor</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#alerts" class="nav-link" data-section="alerts">
+                                <i class="fas fa-bell nav-icon"></i>
+                                <span class="nav-text">Alerts</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">NISR Specific</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#census-data" class="nav-link" data-section="census-data">
+                                <i class="fas fa-users nav-icon"></i>
+                                <span class="nav-text">Census Data</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#economic-indicators" class="nav-link" data-section="economic-indicators">
+                                <i class="fas fa-chart-line nav-icon"></i>
+                                <span class="nav-text">Economic Indicators</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#survey-analysis" class="nav-link" data-section="survey-analysis">
+                                <i class="fas fa-poll nav-icon"></i>
+                                <span class="nav-text">Survey Analysis</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#geo-analysis" class="nav-link" data-section="geo-analysis">
+                                <i class="fas fa-map-marked-alt nav-icon"></i>
+                                <span class="nav-text">Geo Analysis</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <img src="/static/images/user-avatar.jpg" alt="User">
+                </div>
+                <div class="user-info">
+                    <div class="user-name">NISR User</div>
+                    <div class="user-role">Data Analyst</div>
+                </div>
+                <div class="user-actions">
+                    <button class="user-btn" onclick="toggleUserMenu()">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper" id="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item active" id="current-section">Dashboard</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="header-search">
+                    <input type="text" placeholder="Search datasets, reports..." class="search-input">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="header-btn" onclick="toggleTheme()">
+                        <i class="fas fa-moon" id="theme-icon"></i>
+                    </button>
+                    <button class="header-btn" onclick="openNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="header-btn" onclick="openHelp()">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="content-area" id="content-area">
+            {% block content %}
+            <!-- Default Dashboard Content -->
+            <div class="content-section active" id="dashboard-section">
+                <div class="section-header">
+                    <h1>NISR Rwanda Data Analytics Dashboard</h1>
+                    <p>Comprehensive analytics platform for Rwanda's national statistics</p>
+                </div>
+                <!-- Dashboard content will be loaded here -->
+            </div>
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Background Effects -->
+    <div id="particles-js"></div>
+
+    <!-- Enhanced JavaScript -->
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/api-client.js"></script>
+    <script src="/static/js/sidebar-navigation.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/advanced-features.js"></script>
+    <script src="/static/js/ai-chat.js"></script>
+    <script src="/static/js/visualizations.js"></script>
+    <script src="/static/js/real-time.js"></script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
