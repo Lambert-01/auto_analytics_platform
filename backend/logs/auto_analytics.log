@@ -1,0 +1,103 @@
+2025-08-22 15:00:28 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 15:00:28 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 15:00:28 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 15:00:28 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 15:00:28 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 15:02:55 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 15:02:55 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 15:02:55 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 15:02:55 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 15:02:55 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 15:04:31 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 15:04:35 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 15:04:35 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 15:04:35 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 15:04:35 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 15:04:35 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 15:04:35 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 15:04:39 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 15:04:39 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 15:04:39 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 15:04:39 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 15:04:39 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:19:58 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 16:20:08 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 16:20:49 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:20:49 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:20:56 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:20:56 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:20:56 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:20:57 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-22 16:21:44 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 16:21:50 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 16:21:50 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:21:50 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:21:50 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:21:50 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:25:51 | ERROR    | logging:callHandlers:1762 | Error sending personal message: sent 1012 (service restart); no close frame received
+2025-08-22 16:25:52 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-22 16:25:52 | ERROR    | logging:callHandlers:1762 | Error sending personal message: sent 1012 (service restart); no close frame received
+2025-08-22 16:25:53 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 16:26:40 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 16:26:40 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:26:40 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:26:40 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:26:40 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:26:41 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-22 16:26:46 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 16:27:26 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 16:27:26 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:27:26 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:27:26 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:27:26 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:28:31 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 16:28:31 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 16:28:31 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 16:28:31 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 16:28:31 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 16:29:28 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 2
+2025-08-22 16:29:28 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 1
+2025-08-22 16:30:07 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-22 16:30:17 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-22 16:30:52 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-22 16:30:54 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-22 17:29:57 | ERROR    | logging:callHandlers:1762 | Error sending personal message: no close frame received or sent
+2025-08-22 17:29:58 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-22 17:29:58 | ERROR    | logging:callHandlers:1762 | Error sending personal message: no close frame received or sent
+2025-08-22 18:15:03 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-22 18:24:56 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-22 18:24:56 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 18:25:00 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 18:25:00 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 18:25:00 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 18:25:00 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 18:25:00 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 18:25:01 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 18:25:02 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-22 18:25:03 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 18:25:03 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 18:25:03 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 18:25:03 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 18:25:03 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 18:25:29 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 18:25:37 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 18:25:37 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 18:25:37 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 18:25:37 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./auto_analytics.db
+2025-08-22 18:25:37 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 18:48:02 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-22 18:48:09 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
