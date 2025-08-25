@@ -161,6 +161,8 @@ class MLModelInfo(BaseModel):
 
 class MLTrainingRequest(BaseModel):
     """Request model for ML model training."""
+    model_config = {"protected_namespaces": ()}
+    
     dataset_id: str
     model_name: str
     task_type: MLTaskType
@@ -190,6 +192,8 @@ class MLTrainingRequest(BaseModel):
 
 class MLTrainingResponse(BaseModel):
     """Response model for ML model training."""
+    model_config = {"protected_namespaces": ()}
+    
     model_id: str
     model_name: str
     status: ModelStatus

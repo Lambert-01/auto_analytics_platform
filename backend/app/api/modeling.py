@@ -435,23 +435,185 @@ async def train_ml_model(model_id: str, request: MLTrainingRequest):
         request: Training configuration
     """
     try:
-        logger.info(f"Starting background training for model: {model_id}")
+        import time
+        import json
+        from pathlib import Path
+        import pandas as pd
         
-        # TODO: Implement actual model training logic
-        # This would include:
-        # - Loading and preprocessing data
-        # - Feature selection and engineering
-        # - Model selection and training
-        # - Hyperparameter optimization
-        # - Model evaluation and validation
-        # - Saving trained model
-        # - Updating database with results
+        start_time = time.time()
+        logger.info(f"Starting comprehensive background training for model: {model_id}")
         
-        logger.info(f"Model training completed: {model_id}")
+        # Find and load the dataset
+        dataset_path = None
+        data_folder = Path("data")
+        
+        # Search for dataset files
+        for folder in ["uploads", "processed"]:
+            folder_path = data_folder / folder
+            if folder_path.exists():
+                for file_path in folder_path.glob(f"*{request.dataset_id}*"):
+                    if file_path.suffix in ['.csv', '.xlsx', '.parquet']:
+                        dataset_path = file_path
+                        break
+        
+        if not dataset_path:
+            logger.error(f"Dataset not found for training: {request.dataset_id}")
+            return
+        
+        # Load dataset
+        if dataset_path.suffix == '.csv':
+            df = pd.read_csv(dataset_path)
+        elif dataset_path.suffix == '.xlsx':
+            df = pd.read_excel(dataset_path)
+        elif dataset_path.suffix == '.parquet':
+            df = pd.read_parquet(dataset_path)
+        else:
+            logger.error(f"Unsupported file format: {dataset_path.suffix}")
+            return
+        
+        logger.info(f"Dataset loaded for training: {df.shape}")
+        
+        # Initialize AutoML engine
+        from app.core.automl_engine import AutoMLEngine
+        automl_engine = AutoMLEngine()
+        
+        # Determine problem type from request or auto-detect
+        if request.task_type == MLTaskType.CLASSIFICATION:
+            problem_type = 'classification'
+        elif request.task_type == MLTaskType.REGRESSION:
+            problem_type = 'regression'
+        else:
+            problem_type = 'auto'  # Auto-detect
+        
+        # Train the model
+        training_results = automl_engine.train_best_model(
+            df=df,
+            target_column=request.target_column,
+            problem_type=problem_type,
+            max_time=request.max_optimization_time if request.enable_hyperparameter_tuning else 300,
+            cv_folds=request.cross_validation_folds,
+            test_size=request.test_split_ratio
+        )
+        
+        # Save model artifacts
+        models_folder = data_folder / "models" / request.task_type.value
+        models_folder.mkdir(parents=True, exist_ok=True)
+        
+        model_folder = models_folder / model_id
+        model_folder.mkdir(exist_ok=True)
+        
+        # Save the trained model
+        model_path = model_folder / "model.joblib"
+        import joblib
+        joblib.dump(training_results['best_model'], model_path)
+        
+        # Save model metadata
+        execution_time = time.time() - start_time
+        model_metadata = {
+            'model_id': model_id,
+            'model_name': request.model_name,
+            'dataset_id': request.dataset_id,
+            'dataset_path': str(dataset_path),
+            'task_type': request.task_type.value,
+            'target_column': request.target_column,
+            'feature_columns': request.feature_columns,
+            'algorithm': training_results.get('best_model_name', 'unknown'),
+            'best_score': training_results.get('best_score', 0.0),
+            'cv_scores': training_results.get('cv_scores', []),
+            'feature_importance': training_results.get('feature_importance', {}),
+            'metrics': training_results.get('test_metrics', {}),
+            'training_config': {
+                'max_optimization_time': request.max_optimization_time,
+                'enable_hyperparameter_tuning': request.enable_hyperparameter_tuning,
+                'cross_validation_folds': request.cross_validation_folds,
+                'test_split_ratio': request.test_split_ratio,
+                'random_state': request.random_state
+            },
+            'execution_time': execution_time,
+            'model_path': str(model_path),
+            'model_size_bytes': model_path.stat().st_size if model_path.exists() else 0,
+            'created_at': time.time(),
+            'status': 'completed'
+        }
+        
+        # Save metadata
+        metadata_path = model_folder / "metadata.json"
+        with open(metadata_path, 'w') as f:
+            json.dump(_make_model_serializable(model_metadata), f, indent=2, default=str)
+        
+        # Save training report
+        if training_results.get('training_report'):
+            report_path = model_folder / "training_report.json"
+            with open(report_path, 'w') as f:
+                json.dump(_make_model_serializable(training_results['training_report']), f, indent=2, default=str)
+        
+        # Update status
+        status_data = {
+            'model_id': model_id,
+            'status': 'completed',
+            'progress': 100,
+            'execution_time': execution_time,
+            'best_score': training_results.get('best_score', 0.0),
+            'best_algorithm': training_results.get('best_model_name', 'Unknown'),
+            'completed_at': time.time()
+        }
+        
+        status_path = model_folder / "status.json"
+        with open(status_path, 'w') as f:
+            json.dump(status_data, f, indent=2)
+        
+        logger.info(f"Model training completed: {model_id} in {execution_time:.2f} seconds")
+        logger.info(f"Best model: {training_results.get('best_model_name', 'Unknown')} with score: {training_results.get('best_score', 0.0):.4f}")
         
     except Exception as e:
-        logger.error(f"Error in background training {model_id}: {e}")
-        # TODO: Update database with error status
+        logger.error(f"Error in comprehensive background training {model_id}: {e}")
+        
+        # Save error status
+        try:
+            error_folder = Path("data/models") / model_id
+            error_folder.mkdir(parents=True, exist_ok=True)
+            
+            error_status = {
+                'model_id': model_id,
+                'status': 'error',
+                'error_message': str(e),
+                'error_timestamp': time.time(),
+                'progress': 0
+            }
+            
+            error_file = error_folder / "status.json"
+            with open(error_file, 'w') as f:
+                json.dump(error_status, f, indent=2)
+        except Exception as save_error:
+            logger.error(f"Failed to save error status: {save_error}")
+
+
+def _make_model_serializable(obj):
+    """Convert complex objects to JSON-serializable format for models."""
+    import numpy as np
+    import pandas as pd
+    from datetime import datetime
+    
+    if isinstance(obj, dict):
+        return {key: _make_model_serializable(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [_make_model_serializable(item) for item in obj]
+    elif isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    elif pd.isna(obj):
+        return None
+    elif hasattr(obj, 'to_dict'):
+        return _make_model_serializable(obj.to_dict())
+    elif hasattr(obj, '__dict__'):
+        return _make_model_serializable(obj.__dict__)
+    else:
+        return obj
 
 
 async def run_automl_session(session_id: str, request: AutoMLRequest):
@@ -462,19 +624,177 @@ async def run_automl_session(session_id: str, request: AutoMLRequest):
         request: AutoML configuration
     """
     try:
-        logger.info(f"Starting AutoML session: {session_id}")
+        import time
+        import json
+        from pathlib import Path
+        import pandas as pd
         
-        # TODO: Implement actual AutoML logic
-        # This would include:
-        # - Data analysis and preprocessing
-        # - Automatic feature engineering
-        # - Model selection and training
-        # - Ensemble building
-        # - Model comparison and selection
-        # - Saving best models
+        start_time = time.time()
+        logger.info(f"Starting comprehensive AutoML session: {session_id}")
         
-        logger.info(f"AutoML session completed: {session_id}")
+        # Find and load the dataset
+        dataset_path = None
+        data_folder = Path("data")
+        
+        # Search for dataset files
+        for folder in ["uploads", "processed"]:
+            folder_path = data_folder / folder
+            if folder_path.exists():
+                for file_path in folder_path.glob(f"*{request.dataset_id}*"):
+                    if file_path.suffix in ['.csv', '.xlsx', '.parquet']:
+                        dataset_path = file_path
+                        break
+        
+        if not dataset_path:
+            logger.error(f"Dataset not found for AutoML: {request.dataset_id}")
+            return
+        
+        # Load dataset
+        if dataset_path.suffix == '.csv':
+            df = pd.read_csv(dataset_path)
+        elif dataset_path.suffix == '.xlsx':
+            df = pd.read_excel(dataset_path)
+        elif dataset_path.suffix == '.parquet':
+            df = pd.read_parquet(dataset_path)
+        else:
+            logger.error(f"Unsupported file format: {dataset_path.suffix}")
+            return
+        
+        logger.info(f"Dataset loaded for AutoML: {df.shape}")
+        
+        # Initialize AutoML engine
+        from app.core.automl_engine import AutoMLEngine
+        automl_engine = AutoMLEngine()
+        
+        # Run comprehensive AutoML
+        automl_results = automl_engine.run_comprehensive_automl(
+            df=df,
+            target_column=request.target_column,
+            max_time=request.max_time,
+            max_models=request.max_models,
+            include_ensemble=request.include_ensemble,
+            cv_folds=5,
+            test_size=0.2,
+            random_state=42
+        )
+        
+        # Save AutoML session results
+        automl_folder = data_folder / "models" / "automl" / session_id
+        automl_folder.mkdir(parents=True, exist_ok=True)
+        
+        # Save all trained models
+        saved_models = []
+        for i, (model_name, model_data) in enumerate(automl_results.get('models', {}).items()):
+            model_path = automl_folder / f"model_{i}_{model_name.replace(' ', '_')}.joblib"
+            import joblib
+            joblib.dump(model_data['model'], model_path)
+            
+            saved_models.append({
+                'model_name': model_name,
+                'model_path': str(model_path),
+                'score': model_data.get('score', 0.0),
+                'cv_scores': model_data.get('cv_scores', []),
+                'metrics': model_data.get('metrics', {}),
+                'feature_importance': model_data.get('feature_importance', {}),
+                'rank': i + 1
+            })
+        
+        # Save the best ensemble model if available
+        best_model_path = None
+        if automl_results.get('best_model'):
+            best_model_path = automl_folder / "best_model.joblib"
+            joblib.dump(automl_results['best_model'], best_model_path)
+        
+        # Save comprehensive AutoML metadata
+        execution_time = time.time() - start_time
+        automl_metadata = {
+            'session_id': session_id,
+            'dataset_id': request.dataset_id,
+            'dataset_path': str(dataset_path),
+            'target_column': request.target_column,
+            'session_config': {
+                'max_time': request.max_time,
+                'max_models': request.max_models,
+                'include_ensemble': request.include_ensemble,
+                'optimization_metric': request.optimization_metric
+            },
+            'results_summary': {
+                'total_models_trained': len(automl_results.get('models', {})),
+                'best_model_name': automl_results.get('best_model_name', 'Unknown'),
+                'best_score': automl_results.get('best_score', 0.0),
+                'model_comparison': automl_results.get('model_comparison', {}),
+                'feature_importance_global': automl_results.get('feature_importance', {}),
+            },
+            'trained_models': saved_models,
+            'best_model_path': str(best_model_path) if best_model_path else None,
+            'preprocessing_pipeline': automl_results.get('preprocessing_info', {}),
+            'data_analysis': automl_results.get('data_analysis', {}),
+            'recommendations': automl_results.get('recommendations', []),
+            'execution_time': execution_time,
+            'completed_at': time.time(),
+            'status': 'completed'
+        }
+        
+        # Save AutoML session metadata
+        metadata_path = automl_folder / "automl_session.json"
+        with open(metadata_path, 'w') as f:
+            json.dump(_make_model_serializable(automl_metadata), f, indent=2, default=str)
+        
+        # Generate AutoML report
+        from app.core.report_generator import ComprehensiveReportGenerator
+        report_generator = ComprehensiveReportGenerator()
+        
+        automl_report = report_generator.generate_automl_report(
+            automl_results=automl_results,
+            session_metadata=automl_metadata
+        )
+        
+        # Save AutoML report
+        if automl_report.get('html_content'):
+            report_path = automl_folder / "automl_report.html"
+            with open(report_path, 'w', encoding='utf-8') as f:
+                f.write(automl_report['html_content'])
+            logger.info(f"AutoML HTML report saved: {report_path}")
+        
+        # Update session status
+        status_data = {
+            'session_id': session_id,
+            'status': 'completed',
+            'progress': 100,
+            'execution_time': execution_time,
+            'best_score': automl_results.get('best_score', 0.0),
+            'best_model': automl_results.get('best_model_name', 'Unknown'),
+            'models_trained': len(automl_results.get('models', {})),
+            'completed_at': time.time(),
+            'results_available': True
+        }
+        
+        status_path = automl_folder / "status.json"
+        with open(status_path, 'w') as f:
+            json.dump(status_data, f, indent=2)
+        
+        logger.info(f"Comprehensive AutoML session completed: {session_id} in {execution_time:.2f} seconds")
+        logger.info(f"Best model: {automl_results.get('best_model_name', 'Unknown')} with score: {automl_results.get('best_score', 0.0):.4f}")
+        logger.info(f"Total models trained: {len(automl_results.get('models', {}))}")
         
     except Exception as e:
-        logger.error(f"Error in AutoML session {session_id}: {e}")
-        # TODO: Update database with error status
+        logger.error(f"Error in comprehensive AutoML session {session_id}: {e}")
+        
+        # Save error status
+        try:
+            error_folder = Path("data/models/automl") / session_id
+            error_folder.mkdir(parents=True, exist_ok=True)
+            
+            error_status = {
+                'session_id': session_id,
+                'status': 'error',
+                'error_message': str(e),
+                'error_timestamp': time.time(),
+                'progress': 0
+            }
+            
+            error_file = error_folder / "status.json"
+            with open(error_file, 'w') as f:
+                json.dump(error_status, f, indent=2)
+        except Exception as save_error:
+            logger.error(f"Failed to save AutoML error status: {save_error}")

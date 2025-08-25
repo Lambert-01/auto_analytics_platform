@@ -245,29 +245,110 @@ async def process_uploaded_dataset(file_id: str, file_path: str):
         file_path: Path to uploaded file
     """
     try:
-        logger.info(f"Starting background processing for file: {file_id}")
+        logger.info(f"Starting comprehensive processing for file: {file_id}")
         
         # Load dataset
         df = file_handler.load_dataset(file_path)
         logger.info(f"Dataset loaded: {df.shape}")
         
-        # Basic data profiling
-        # TODO: Implement comprehensive data profiling
-        rows, columns = df.shape
+        # Initialize comprehensive data processor
+        from app.core.data_processor import ComprehensiveDataProcessor
+        processor = ComprehensiveDataProcessor()
+        
+        # Perform comprehensive analysis
+        processing_results = processor.process_dataset(
+            df=df,
+            target_column=None,  # Auto-detect or user can specify later
+            dataset_name=file_id
+        )
         
         # Save processed data
         processed_path = file_handler.save_processed_dataset(df, file_id)
         logger.info(f"Processed dataset saved: {processed_path}")
         
-        # TODO: Update database with processing results
-        # This would include:
-        # - Dataset metadata
-        # - Column information
-        # - Basic statistics
-        # - Data quality metrics
+        # Save analysis results
+        results_path = processed_path.replace('.parquet', '_analysis.json')
+        with open(results_path, 'w') as f:
+            # Convert numpy types for JSON serialization
+            serializable_results = _make_json_serializable(processing_results)
+            json.dump(serializable_results, f, indent=2)
         
-        logger.info(f"Background processing completed for file: {file_id}")
+        logger.info(f"Analysis results saved: {results_path}")
+        
+        # Generate insights
+        from app.core.ai_insights_engine import AIInsightsEngine
+        insights_engine = AIInsightsEngine()
+        
+        ai_insights = insights_engine.generate_comprehensive_insights(
+            dataset_info=processing_results['dataset_info'],
+            profiling_results=processing_results['profiling'],
+            analysis_results=processing_results,
+            model_results=None
+        )
+        
+        # Save insights
+        insights_path = processed_path.replace('.parquet', '_insights.json')
+        with open(insights_path, 'w') as f:
+            json.dump(_make_json_serializable(ai_insights), f, indent=2)
+        
+        logger.info(f"AI insights generated and saved: {insights_path}")
+        
+        # Store metadata for future retrieval
+        metadata = {
+            'file_id': file_id,
+            'original_path': file_path,
+            'processed_path': processed_path,
+            'analysis_path': results_path,
+            'insights_path': insights_path,
+            'shape': df.shape,
+            'processing_timestamp': datetime.now().isoformat(),
+            'status': 'completed',
+            'quality_score': processing_results.get('profiling', {}).get('overview', {}).get('quality_score', 0),
+            'summary': {
+                'total_insights': len(ai_insights.get('key_findings', [])),
+                'data_quality': 'excellent' if processing_results.get('profiling', {}).get('overview', {}).get('missing_data', {}).get('missing_percentage', 0) < 5 else 'good',
+                'recommendation_count': len(ai_insights.get('recommendations', []))
+            }
+        }
+        
+        metadata_path = processed_path.replace('.parquet', '_metadata.json')
+        with open(metadata_path, 'w') as f:
+            json.dump(metadata, f, indent=2)
+        
+        logger.info(f"Comprehensive processing completed for file: {file_id}")
         
     except Exception as e:
         logger.error(f"Error processing dataset {file_id}: {e}")
-        # TODO: Update database with error status
+        # Save error information
+        error_metadata = {
+            'file_id': file_id,
+            'status': 'error',
+            'error_message': str(e),
+            'error_timestamp': datetime.now().isoformat()
+        }
+        
+        error_path = file_path.replace('.csv', '_error.json').replace('.xlsx', '_error.json')
+        with open(error_path, 'w') as f:
+            json.dump(error_metadata, f, indent=2)
+
+
+def _make_json_serializable(obj):
+    """Convert numpy types and other non-serializable objects to JSON-serializable format."""
+    import numpy as np
+    
+    if isinstance(obj, dict):
+        return {key: _make_json_serializable(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [_make_json_serializable(item) for item in obj]
+    elif isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    elif pd.isna(obj):
+        return None
+    else:
+        return obj

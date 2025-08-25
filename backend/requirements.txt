@@ -41,6 +41,11 @@ sqlalchemy==2.0.23
 alembic==1.12.1
 psycopg2-binary==2.9.9
 
+# MongoDB
+pymongo==4.6.0
+motor==3.3.2
+beanie==1.24.0
+
 # Task Queue and Caching
 celery==5.3.4
 redis==5.0.1

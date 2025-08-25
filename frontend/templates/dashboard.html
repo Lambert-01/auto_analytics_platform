@@ -1,241 +1,26 @@
 {% extends "layout.html" %}
 
-{% block title %}NISR Rwanda Analytics Dashboard{% endblock %}
+{% block title %}Dashboard - NISR Rwanda Analytics Platform{% endblock %}
 
 {% block content %}
-<!-- Dashboard Content -->
-<div class="content-section active" id="dashboard-section">
-    <div class="section-header">
-        <h1>NISR Rwanda Data Analytics Dashboard</h1>
-        <p>Comprehensive analytics platform for Rwanda's national statistics</p>
+<!-- Dashboard will be loaded by JavaScript -->
+<div id="dashboard-loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading dashboard...</span>
     </div>
-    
-    <div class="dashboard-overview">
-        <!-- Key Metrics -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="metric-content">
-                    <h3 class="metric-value" id="population-count">13.2M</h3>
-                    <p class="metric-label">Population (2022)</p>
-                    <span class="metric-change positive">+2.1% from 2020</span>
-                </div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="metric-content">
-                    <h3 class="metric-value" id="gdp-growth">8.2%</h3>
-                    <p class="metric-label">GDP Growth Rate</p>
-                    <span class="metric-change positive">+1.3% from Q2</span>
-                </div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="metric-content">
-                    <h3 class="metric-value" id="literacy-rate">76.3%</h3>
-                    <p class="metric-label">Literacy Rate</p>
-                    <span class="metric-change positive">+4.2% improvement</span>
-                </div>
-            </div>
-            
-            <div class="metric-card">
-                <div class="metric-icon">
-                    <i class="fas fa-hospital"></i>
-                </div>
-                <div class="metric-content">
-                    <h3 class="metric-value" id="health-coverage">94.8%</h3>
-                    <p class="metric-label">Health Insurance Coverage</p>
-                    <span class="metric-change positive">+3.1% increase</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Quick Actions -->
-        <div class="quick-actions-section">
-            <h2>Quick Actions</h2>
-            <div class="actions-grid">
-                <div class="action-card" onclick="sidebarNav.switchSection('data-upload')">
-                    <div class="action-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <h4>Upload New Dataset</h4>
-                    <p>Import census, survey, or economic data</p>
-                </div>
-                
-                <div class="action-card" onclick="sidebarNav.switchSection('analysis')">
-                    <div class="action-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <h4>Start Analysis</h4>
-                    <p>Perform statistical analysis on existing data</p>
-                </div>
-                
-                <div class="action-card" onclick="sidebarNav.switchSection('automl')">
-                    <div class="action-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h4>AutoML</h4>
-                    <p>Build predictive models automatically</p>
-                </div>
-                
-                <div class="action-card" onclick="sidebarNav.switchSection('reports')">
-                    <div class="action-icon">
-                        <i class="fas fa-file-invoice"></i>
-                    </div>
-                    <h4>Generate Report</h4>
-                    <p>Create comprehensive analytical reports</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Recent Activity -->
-        <div class="activity-section">
-            <h2>Recent Activity</h2>
-            <div class="activity-timeline">
-                <div class="activity-item">
-                    <div class="activity-time">2 hours ago</div>
-                    <div class="activity-content">
-                        <div class="activity-icon">
-                            <i class="fas fa-upload"></i>
-                        </div>
-                        <div class="activity-details">
-                            <h4>Rwanda Population Census 2022</h4>
-                            <p>Dataset uploaded and processed successfully</p>
-                            <span class="activity-meta">2.3M records • 45 columns</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-time">4 hours ago</div>
-                    <div class="activity-content">
-                        <div class="activity-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div class="activity-details">
-                            <h4>Economic Forecasting Model</h4>
-                            <p>AutoML training completed with 94.2% accuracy</p>
-                            <span class="activity-meta">Random Forest • 15 features</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="activity-item">
-                    <div class="activity-time">6 hours ago</div>
-                    <div class="activity-content">
-                        <div class="activity-icon">
-                            <i class="fas fa-chart-area"></i>
-                        </div>
-                        <div class="activity-details">
-                            <h4>Quarterly Economic Report</h4>
-                            <p>Comprehensive analysis report generated</p>
-                            <span class="activity-meta">PDF • 45 pages • 12 visualizations</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Featured Visualizations -->
-        <div class="featured-viz-section">
-            <h2>Featured Analytics</h2>
-            <div class="viz-grid">
-                <div class="viz-card">
-                    <div class="viz-header">
-                        <h4>Population Distribution by Province</h4>
-                        <button class="viz-expand"><i class="fas fa-expand"></i></button>
-                    </div>
-                    <div class="viz-content">
-                        <div id="population-chart" class="chart-placeholder">
-                            <i class="fas fa-chart-pie"></i>
-                            <p>Population Distribution Chart</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="viz-card">
-                    <div class="viz-header">
-                        <h4>Economic Growth Trends</h4>
-                        <button class="viz-expand"><i class="fas fa-expand"></i></button>
-                    </div>
-                    <div class="viz-content">
-                        <div id="economic-chart" class="chart-placeholder">
-                            <i class="fas fa-chart-line"></i>
-                            <p>Economic Trends Chart</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="viz-card">
-                    <div class="viz-header">
-                        <h4>Education Progress</h4>
-                        <button class="viz-expand"><i class="fas fa-expand"></i></button>
-                    </div>
-                    <div class="viz-content">
-                        <div id="education-chart" class="chart-placeholder">
-                            <i class="fas fa-chart-bar"></i>
-                            <p>Education Metrics Chart</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <p class="mt-3 text-muted">Loading your analytics dashboard...</p>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-// Dashboard-specific initialization
-document.addEventListener('DOMContentLoaded', function() {
-    initializeDashboardCharts();
-    startMetricsAnimation();
-});
-
-function initializeDashboardCharts() {
-    // Initialize placeholder charts
-    console.log('Initializing dashboard charts...');
-    
-    // Population chart placeholder
-    const populationChart = document.getElementById('population-chart');
-    if (populationChart) {
-        // Chart implementation will be added
-    }
-    
-    // Economic chart placeholder
-    const economicChart = document.getElementById('economic-chart');
-    if (economicChart) {
-        // Chart implementation will be added
-    }
-    
-    // Education chart placeholder
-    const educationChart = document.getElementById('education-chart');
-    if (educationChart) {
-        // Chart implementation will be added
-    }
-}
-
-function startMetricsAnimation() {
-    // Animate metric values
-    const metricValues = document.querySelectorAll('.metric-value');
-    metricValues.forEach(metric => {
-        metric.style.opacity = '0';
-        metric.style.transform = 'translateY(20px)';
-        
+    // Auto-load dashboard when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load dashboard content
         setTimeout(() => {
-            metric.style.transition = 'all 0.6s ease-out';
-            metric.style.opacity = '1';
-            metric.style.transform = 'translateY(0)';
-        }, 100);
+            const content = getDashboardHTML();
+            document.getElementById('main-content-area').innerHTML = content;
+        }, 500);
     });
-}
 </script>
 {% endblock %}

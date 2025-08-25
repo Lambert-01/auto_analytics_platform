@@ -5,28 +5,189 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}NISR Rwanda Data Analytics Platform{% endblock %}</title>
     
-    <!-- Enhanced CSS -->
-    <link rel="stylesheet" href="/static/css/main.css">
-    <link rel="stylesheet" href="/static/css/components.css">
-    <link rel="stylesheet" href="/static/css/responsive.css">
-    <link rel="stylesheet" href="/static/css/advanced.css">
-    <link rel="stylesheet" href="/static/css/sidebar.css">
-    
-    <!-- External Libraries -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Data Visualization Libraries -->
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     
-    <!-- Particles.js for background animation -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #64748b;
+            --success-color: #16a34a;
+            --danger-color: #dc2626;
+            --warning-color: #ca8a04;
+            --info-color: #0891b2;
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+            color: white;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-section-title {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 1.5rem 1rem 0.5rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            margin: 0.25rem;
+            border-radius: 8px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(59, 130, 246, 0.15);
+            color: white;
+            transform: translateX(4px);
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .sidebar.collapsed + .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        .top-navbar {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .hidden { display: none !important; }
+        
+        .card-modern {
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .card-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-modern {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.625rem 1.25rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control-modern {
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control-modern:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .progress-modern {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #f1f5f9;
+        }
+        
+        .table-modern {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+    </style>
     
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- Professional Sidebar -->
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="text-center text-white">
+            <div class="spinner-border mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo">
@@ -34,224 +195,290 @@
                     <i class="fas fa-chart-network"></i>
                 </div>
                 <div class="logo-text">
-                    <div class="logo-title">NISR</div>
-                    <div class="logo-subtitle">Analytics</div>
-                </div>
-            </div>
-            <button class="sidebar-toggle" id="sidebar-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-        
-        <div class="sidebar-content">
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <div class="nav-section-title">Main</div>
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#dashboard" class="nav-link active" data-section="dashboard">
-                                <i class="fas fa-tachometer-alt nav-icon"></i>
-                                <span class="nav-text">Dashboard</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#data-upload" class="nav-link" data-section="data-upload">
-                                <i class="fas fa-cloud-upload-alt nav-icon"></i>
-                                <span class="nav-text">Data Upload</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#datasets" class="nav-link" data-section="datasets">
-                                <i class="fas fa-database nav-icon"></i>
-                                <span class="nav-text">Datasets</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-section-title">Analytics</div>
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#analysis" class="nav-link" data-section="analysis">
-                                <i class="fas fa-chart-bar nav-icon"></i>
-                                <span class="nav-text">Analysis</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#ai-lab" class="nav-link" data-section="ai-lab">
-                                <i class="fas fa-robot nav-icon"></i>
-                                <span class="nav-text">AI Lab</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#automl" class="nav-link" data-section="automl">
-                                <i class="fas fa-brain nav-icon"></i>
-                                <span class="nav-text">AutoML</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#predictions" class="nav-link" data-section="predictions">
-                                <i class="fas fa-crystal-ball nav-icon"></i>
-                                <span class="nav-text">Predictions</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-section-title">Visualization</div>
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#visualizations" class="nav-link" data-section="visualizations">
-                                <i class="fas fa-chart-area nav-icon"></i>
-                                <span class="nav-text">Viz Studio</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#dashboards" class="nav-link" data-section="dashboards">
-                                <i class="fas fa-th-large nav-icon"></i>
-                                <span class="nav-text">Dashboards</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#reports" class="nav-link" data-section="reports">
-                                <i class="fas fa-file-invoice nav-icon"></i>
-                                <span class="nav-text">Reports</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-section-title">Real-time</div>
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#real-time" class="nav-link" data-section="real-time">
-                                <i class="fas fa-stream nav-icon"></i>
-                                <span class="nav-text">Live Monitor</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#alerts" class="nav-link" data-section="alerts">
-                                <i class="fas fa-bell nav-icon"></i>
-                                <span class="nav-text">Alerts</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-section-title">NISR Specific</div>
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#census-data" class="nav-link" data-section="census-data">
-                                <i class="fas fa-users nav-icon"></i>
-                                <span class="nav-text">Census Data</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#economic-indicators" class="nav-link" data-section="economic-indicators">
-                                <i class="fas fa-chart-line nav-icon"></i>
-                                <span class="nav-text">Economic Indicators</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#survey-analysis" class="nav-link" data-section="survey-analysis">
-                                <i class="fas fa-poll nav-icon"></i>
-                                <span class="nav-text">Survey Analysis</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#geo-analysis" class="nav-link" data-section="geo-analysis">
-                                <i class="fas fa-map-marked-alt nav-icon"></i>
-                                <span class="nav-text">Geo Analysis</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-        
-        <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-avatar">
-                    <img src="/static/images/user-avatar.jpg" alt="User">
-                </div>
-                <div class="user-info">
-                    <div class="user-name">NISR User</div>
-                    <div class="user-role">Data Analyst</div>
-                </div>
-                <div class="user-actions">
-                    <button class="user-btn" onclick="toggleUserMenu()">
-                        <i class="fas fa-cog"></i>
-                    </button>
+                    <div class="fw-bold">NISR Analytics</div>
+                    <small class="text-muted">Rwanda Data Platform</small>
                 </div>
             </div>
         </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Main Section -->
+            <div class="nav-section-title">Main</div>
+            <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#data-upload" class="nav-link" data-section="data-upload">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Data Upload</span>
+            </a>
+            <a href="#datasets" class="nav-link" data-section="datasets">
+                <i class="fas fa-database"></i>
+                <span>Datasets</span>
+            </a>
+            
+            <!-- Analytics Section -->
+            <div class="nav-section-title">Analytics</div>
+            <a href="#analysis" class="nav-link" data-section="analysis">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analysis</span>
+            </a>
+            <a href="#ai-chat" class="nav-link" data-section="ai-chat">
+                <i class="fas fa-comments"></i>
+                <span>AI Assistant</span>
+            </a>
+            <a href="#automl" class="nav-link" data-section="automl">
+                <i class="fas fa-brain"></i>
+                <span>AutoML</span>
+            </a>
+            
+            <!-- Visualization Section -->
+            <div class="nav-section-title">Visualization</div>
+            <a href="#visualizations" class="nav-link" data-section="visualizations">
+                <i class="fas fa-chart-area"></i>
+                <span>Charts</span>
+            </a>
+            <a href="#reports" class="nav-link" data-section="reports">
+                <i class="fas fa-file-invoice"></i>
+                <span>Reports</span>
+            </a>
+            
+            <!-- NISR Specific Section -->
+            <div class="nav-section-title">NISR Specific</div>
+            <a href="#census-data" class="nav-link" data-section="census-data">
+                <i class="fas fa-users"></i>
+                <span>Census Data</span>
+            </a>
+            <a href="#economic-indicators" class="nav-link" data-section="economic-indicators">
+                <i class="fas fa-chart-line"></i>
+                <span>Economic Indicators</span>
+            </a>
+            <a href="#geo-analysis" class="nav-link" data-section="geo-analysis">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Geo Analysis</span>
+            </a>
+        </nav>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="main-wrapper" id="main-wrapper">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="header-left">
-                <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation Bar -->
+        <nav class="navbar navbar-expand-lg top-navbar">
+            <div class="container-fluid">
+                <button class="btn btn-outline-secondary me-3" id="sidebar-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="breadcrumb">
-                    <span class="breadcrumb-item active" id="current-section">Dashboard</span>
-                </div>
-            </div>
-            
-            <div class="header-right">
-                <div class="header-search">
-                    <input type="text" placeholder="Search datasets, reports..." class="search-input">
-                    <i class="fas fa-search search-icon"></i>
-                </div>
                 
-                <div class="header-actions">
-                    <button class="header-btn" onclick="toggleTheme()">
-                        <i class="fas fa-moon" id="theme-icon"></i>
-                    </button>
-                    <button class="header-btn" onclick="openNotifications()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
-                    <button class="header-btn" onclick="openHelp()">
-                        <i class="fas fa-question-circle"></i>
-                    </button>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">NISR</a></li>
+                        <li class="breadcrumb-item active" id="current-section">Dashboard</li>
+                    </ol>
+                </nav>
+                
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <!-- Search -->
+                    <div class="input-group" style="width: 300px;">
+                        <input type="text" class="form-control form-control-modern" placeholder="Search datasets, reports...">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary position-relative" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-bell"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notification-count">
+                                0
+                            </span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="notifications-dropdown">
+                            <li><h6 class="dropdown-header">Notifications</h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><span class="dropdown-item-text">No new notifications</span></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- User Menu -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                            <img src="/static/images/user-avatar.jpg" alt="User" class="rounded-circle" width="32" height="32">
+                            <span>NISR User</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#profile"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="#settings"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </header>
+        </nav>
 
-        <!-- Content Area -->
-        <main class="content-area" id="content-area">
+        <!-- Main Content Area -->
+        <div class="container-fluid p-4" id="main-content-area">
             {% block content %}
-            <!-- Default Dashboard Content -->
-            <div class="content-section active" id="dashboard-section">
-                <div class="section-header">
-                    <h1>NISR Rwanda Data Analytics Dashboard</h1>
-                    <p>Comprehensive analytics platform for Rwanda's national statistics</p>
-                </div>
-                <!-- Dashboard content will be loaded here -->
-            </div>
+            <!-- Default content will be loaded here by JavaScript -->
             {% endblock %}
-        </main>
+        </div>
     </div>
 
-    <!-- Background Effects -->
-    <div id="particles-js"></div>
+    <!-- Toast Container for Notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container"></div>
 
-    <!-- Enhanced JavaScript -->
-    <script src="/static/js/utils.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Global app configuration
+        window.APP_CONFIG = {
+            API_BASE_URL: '/api/v1',
+            WS_URL: 'ws://localhost:8000/ws/realtime',
+            CURRENT_USER: null,
+            CURRENT_DATASET: null
+        };
+        
+        // Global state management
+        window.APP_STATE = {
+            datasets: [],
+            analyses: [],
+            models: [],
+            reports: [],
+            notifications: []
+        };
+        
+        // Utility functions
+        window.showLoading = function() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        };
+        
+        window.hideLoading = function() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        };
+        
+        window.showToast = function(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const toastHTML = `
+                <div class="toast" id="${toastId}" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <i class="fas fa-${type === 'success' ? 'check-circle text-success' : type === 'error' ? 'exclamation-circle text-danger' : 'info-circle text-info'} me-2"></i>
+                        <strong class="me-auto">NISR Analytics</strong>
+                        <small class="text-muted">now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">${message}</div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            const toast = new bootstrap.Toast(document.getElementById(toastId));
+            toast.show();
+        };
+        
+        // Sidebar toggle functionality
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+        
+        // Navigation handling
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.nav-link')) {
+                e.preventDefault();
+                
+                // Remove active class from all nav links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                e.target.classList.add('active');
+                
+                // Update breadcrumb
+                const section = e.target.getAttribute('data-section');
+                document.getElementById('current-section').textContent = e.target.querySelector('span').textContent;
+                
+                // Load section content
+                loadSection(section);
+            }
+        });
+        
+        // Load section content function
+        async function loadSection(section) {
+            window.showLoading();
+            
+            try {
+                const response = await fetch(`/api/v1/frontend/section/${section}`);
+                if (response.ok) {
+                    const html = await response.text();
+                    document.getElementById('main-content-area').innerHTML = html;
+                } else {
+                    // Fallback to client-side rendering
+                    renderSection(section);
+                }
+            } catch (error) {
+                console.error('Error loading section:', error);
+                renderSection(section);
+            } finally {
+                window.hideLoading();
+            }
+        }
+        
+        // Client-side section rendering
+        function renderSection(section) {
+            const contentArea = document.getElementById('main-content-area');
+            
+            switch(section) {
+                case 'dashboard':
+                    contentArea.innerHTML = getDashboardHTML();
+                    break;
+                case 'data-upload':
+                    contentArea.innerHTML = getDataUploadHTML();
+                    break;
+                case 'datasets':
+                    contentArea.innerHTML = getDatasetsHTML();
+                    break;
+                case 'analysis':
+                    contentArea.innerHTML = getAnalysisHTML();
+                    break;
+                case 'ai-chat':
+                    contentArea.innerHTML = getAIChatHTML();
+                    break;
+                case 'automl':
+                    contentArea.innerHTML = getAutoMLHTML();
+                    break;
+                case 'visualizations':
+                    contentArea.innerHTML = getVisualizationsHTML();
+                    break;
+                case 'reports':
+                    contentArea.innerHTML = getReportsHTML();
+                    break;
+                default:
+                    contentArea.innerHTML = getDefaultHTML(section);
+            }
+        }
+        
+        // Initialize app on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial dashboard
+            loadSection('dashboard');
+            
+            // Initialize WebSocket connection
+            initializeWebSocket();
+            
+            // Load initial data
+            loadInitialData();
+        });
+    </script>
+    
+    <!-- Section Templates JavaScript -->
     <script src="/static/js/api-client.js"></script>
-    <script src="/static/js/sidebar-navigation.js"></script>
-    <script src="/static/js/main.js"></script>
-    <script src="/static/js/advanced-features.js"></script>
-    <script src="/static/js/ai-chat.js"></script>
-    <script src="/static/js/visualizations.js"></script>
-    <script src="/static/js/real-time.js"></script>
+    <script src="/static/js/section-templates.js"></script>
+    <script src="/static/js/app-core.js"></script>
     
     {% block extra_scripts %}{% endblock %}
 </body>

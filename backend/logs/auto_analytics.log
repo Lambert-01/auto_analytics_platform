@@ -182,3 +182,217 @@
 2025-08-22 19:52:07 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
 2025-08-22 19:54:50 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
 2025-08-22 19:54:52 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-22 20:13:11 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-22 20:13:11 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-22 20:13:16 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-22 20:13:16 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-22 20:13:16 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-22 20:13:16 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-22 20:13:16 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-22 20:13:17 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 13:55:00 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 13:55:00 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 13:55:00 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 13:55:00 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 13:55:00 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 15:11:55 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 15:33:47 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 15:33:51 | ERROR    | logging:callHandlers:1762 | Error sending personal message: sent 1012 (service restart); no close frame received
+2025-08-25 15:33:51 | ERROR    | logging:callHandlers:1762 | Error sending personal message: Unexpected ASGI message 'websocket.send', after sending 'websocket.close'.
+2025-08-25 15:33:51 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 15:34:28 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 15:34:28 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 15:34:28 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 15:34:28 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 15:34:28 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 15:34:28 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 15:39:07 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 15:39:07 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 15:39:16 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 15:39:16 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 15:39:16 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 15:39:16 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 15:39:16 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 15:39:17 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 15:49:10 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 15:49:10 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 15:49:19 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 15:49:19 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 15:49:19 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 15:49:19 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 15:49:19 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 15:49:20 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 15:52:27 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 15:52:27 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 15:52:35 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 15:52:35 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 15:52:35 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 15:52:35 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 15:52:35 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 15:52:36 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 15:57:31 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 15:57:31 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 15:57:34 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 15:57:34 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 15:57:34 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 15:57:34 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 15:57:34 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 15:57:36 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 15:58:36 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 15:58:36 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 15:58:39 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 15:58:39 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 15:58:39 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 15:58:39 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 15:58:39 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 15:58:42 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:03:01 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:03:01 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:03:10 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:03:10 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:03:10 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:03:10 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:03:10 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 16:03:11 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:06:49 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:06:49 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:07:00 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:07:00 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:07:00 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:07:00 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:07:00 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 16:07:01 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:11:05 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:11:05 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:11:08 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:11:08 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:11:08 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:11:08 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:11:08 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 16:11:08 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:13:47 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:13:47 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:13:56 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:13:56 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:13:56 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:13:56 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:13:56 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 16:14:00 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:14:09 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:14:10 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:28:29 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:28:29 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:28:46 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:28:46 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:28:46 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:28:46 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:28:46 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 16:28:48 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:32:40 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:32:40 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:33:08 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:33:08 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:33:08 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:33:08 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:33:08 | INFO     | logging:callHandlers:1762 | Database initialized successfully
+2025-08-25 16:33:19 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:33:19 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:33:19 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:33:19 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:33:19 | ERROR    | logging:callHandlers:1762 | Failed to initialize MongoDB: No module named 'motor'
+2025-08-25 16:33:19 | WARNING  | logging:callHandlers:1762 | Continuing without database connection...
+2025-08-25 16:33:20 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:34:49 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:34:50 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:34:59 | WARNING  | logging:callHandlers:1762 | Some API modules not yet available: No module named 'aiofiles'
+2025-08-25 16:34:59 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:34:59 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:34:59 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:34:59 | ERROR    | logging:callHandlers:1762 | Failed to initialize MongoDB: No module named 'motor'
+2025-08-25 16:34:59 | WARNING  | logging:callHandlers:1762 | Continuing without database connection...
+2025-08-25 16:35:01 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:47:29 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:47:52 | INFO     | logging:callHandlers:1762 | All API routers loaded successfully
+2025-08-25 16:47:52 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:47:52 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:47:52 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:47:54 | INFO     | logging:callHandlers:1762 | Connecting to MongoDB at: mongodb://localhost:27017
+2025-08-25 16:47:57 | INFO     | logging:callHandlers:1762 | All API routers loaded successfully
+2025-08-25 16:47:57 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:47:57 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:47:57 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:47:58 | INFO     | logging:callHandlers:1762 | Connecting to MongoDB at: mongodb://localhost:27017
+2025-08-25 16:47:58 | INFO     | logging:callHandlers:1762 | MongoDB connection successful
+2025-08-25 16:47:59 | INFO     | logging:callHandlers:1762 | Beanie ODM initialized successfully
+2025-08-25 16:47:59 | WARNING  | logging:callHandlers:1762 | Some indexes may not have been created: create_index
+2025-08-25 16:47:59 | INFO     | logging:callHandlers:1762 | MongoDB initialized successfully
+2025-08-25 16:48:05 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 16:52:39 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 16:52:39 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 16:52:39 | INFO     | logging:callHandlers:1762 | MongoDB connection closed
+2025-08-25 16:52:39 | INFO     | logging:callHandlers:1762 | Database connections closed
+2025-08-25 16:52:44 | INFO     | logging:callHandlers:1762 | All API routers loaded successfully
+2025-08-25 16:52:44 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 16:52:44 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 16:52:44 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 16:52:45 | INFO     | logging:callHandlers:1762 | Connecting to MongoDB at: mongodb://localhost:27017
+2025-08-25 16:52:45 | INFO     | logging:callHandlers:1762 | MongoDB connection successful
+2025-08-25 16:52:45 | INFO     | logging:callHandlers:1762 | Beanie ODM initialized successfully
+2025-08-25 16:52:45 | WARNING  | logging:callHandlers:1762 | Some indexes may not have been created: create_index
+2025-08-25 16:52:45 | INFO     | logging:callHandlers:1762 | MongoDB initialized successfully
+2025-08-25 16:52:45 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 18:18:35 | INFO     | logging:callHandlers:1762 | All API routers loaded successfully
+2025-08-25 18:18:35 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 18:18:35 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 18:18:35 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 18:18:37 | INFO     | logging:callHandlers:1762 | Connecting to MongoDB at: mongodb://localhost:27017
+2025-08-25 18:18:37 | INFO     | logging:callHandlers:1762 | MongoDB connection successful
+2025-08-25 18:18:37 | INFO     | logging:callHandlers:1762 | Beanie ODM initialized successfully
+2025-08-25 18:18:38 | WARNING  | logging:callHandlers:1762 | Some indexes may not have been created: create_index
+2025-08-25 18:18:38 | INFO     | logging:callHandlers:1762 | MongoDB initialized successfully
+2025-08-25 18:18:39 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 18:26:22 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 18:32:01 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 18:32:01 | INFO     | logging:callHandlers:1762 | MongoDB connection closed
+2025-08-25 18:32:01 | INFO     | logging:callHandlers:1762 | Database connections closed
+2025-08-25 18:32:14 | INFO     | logging:callHandlers:1762 | All API routers loaded successfully
+2025-08-25 18:32:14 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 18:32:14 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 18:32:14 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 18:32:16 | INFO     | logging:callHandlers:1762 | Connecting to MongoDB at: mongodb://localhost:27017
+2025-08-25 18:32:16 | INFO     | logging:callHandlers:1762 | MongoDB connection successful
+2025-08-25 18:32:16 | INFO     | logging:callHandlers:1762 | Beanie ODM initialized successfully
+2025-08-25 18:32:16 | WARNING  | logging:callHandlers:1762 | Some indexes may not have been created: create_index
+2025-08-25 18:32:16 | INFO     | logging:callHandlers:1762 | MongoDB initialized successfully
+2025-08-25 18:33:01 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 18:33:01 | INFO     | logging:callHandlers:1762 | MongoDB connection closed
+2025-08-25 18:33:01 | INFO     | logging:callHandlers:1762 | Database connections closed
+2025-08-25 18:33:08 | INFO     | logging:callHandlers:1762 | All API routers loaded successfully
+2025-08-25 18:33:08 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 18:33:08 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 18:33:08 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 18:33:10 | INFO     | logging:callHandlers:1762 | Connecting to MongoDB at: mongodb://localhost:27017
+2025-08-25 18:33:10 | INFO     | logging:callHandlers:1762 | MongoDB connection successful
+2025-08-25 18:33:10 | INFO     | logging:callHandlers:1762 | Beanie ODM initialized successfully
+2025-08-25 18:33:10 | WARNING  | logging:callHandlers:1762 | Some indexes may not have been created: create_index
+2025-08-25 18:33:10 | INFO     | logging:callHandlers:1762 | MongoDB initialized successfully
+2025-08-25 18:35:01 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 18:35:01 | INFO     | logging:callHandlers:1762 | MongoDB connection closed
+2025-08-25 18:35:01 | INFO     | logging:callHandlers:1762 | Database connections closed
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | All API routers loaded successfully
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | Starting Auto Analytics Platform...
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | Debug mode: False
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | Database URL: sqlite:///./nisr_analytics.db
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | Connecting to MongoDB at: mongodb://localhost:27017
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | MongoDB connection successful
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | Beanie ODM initialized successfully
+2025-08-25 18:35:06 | WARNING  | logging:callHandlers:1762 | Some indexes may not have been created: create_index
+2025-08-25 18:35:06 | INFO     | logging:callHandlers:1762 | MongoDB initialized successfully
+2025-08-25 18:36:30 | INFO     | logging:callHandlers:1762 | Retrieved real stats from database
+2025-08-25 18:36:30 | INFO     | logging:callHandlers:1762 | Retrieved real stats from database
+2025-08-25 18:36:30 | INFO     | logging:callHandlers:1762 | Created default user in database
+2025-08-25 18:36:30 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous connected. Total connections: 1
+2025-08-25 18:36:47 | INFO     | logging:callHandlers:1762 | WebSocket client anonymous disconnected. Total connections: 0
+2025-08-25 18:36:47 | INFO     | logging:callHandlers:1762 | Shutting down Auto Analytics Platform...
+2025-08-25 18:36:47 | INFO     | logging:callHandlers:1762 | MongoDB connection closed
+2025-08-25 18:36:47 | INFO     | logging:callHandlers:1762 | Database connections closed

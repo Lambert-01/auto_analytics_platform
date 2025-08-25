@@ -517,22 +517,219 @@ async def generate_comprehensive_report(report_id: str, request: ReportGeneratio
         request: Report generation configuration
     """
     try:
-        logger.info(f"Starting background report generation: {report_id}")
+        import time
+        import json
+        from pathlib import Path
+        import pandas as pd
         
-        # TODO: Implement actual report generation logic
-        # This would include:
-        # - Loading data from specified sources
-        # - Performing analysis if needed
-        # - Generating visualizations
-        # - Compiling report sections
-        # - Creating final report file
-        # - Updating database with results
+        start_time = time.time()
+        logger.info(f"Starting comprehensive background report generation: {report_id}")
         
-        logger.info(f"Report generation completed: {report_id}")
+        # Find and load datasets
+        data_folder = Path("data")
+        datasets = {}
+        
+        for dataset_id in request.datasets:
+            dataset_path = None
+            
+            # Search for dataset files
+            for folder in ["uploads", "processed"]:
+                folder_path = data_folder / folder
+                if folder_path.exists():
+                    for file_path in folder_path.glob(f"*{dataset_id}*"):
+                        if file_path.suffix in ['.csv', '.xlsx', '.parquet']:
+                            dataset_path = file_path
+                            break
+            
+            if dataset_path:
+                # Load dataset
+                if dataset_path.suffix == '.csv':
+                    df = pd.read_csv(dataset_path)
+                elif dataset_path.suffix == '.xlsx':
+                    df = pd.read_excel(dataset_path)
+                elif dataset_path.suffix == '.parquet':
+                    df = pd.read_parquet(dataset_path)
+                
+                datasets[dataset_id] = {
+                    'dataframe': df,
+                    'path': str(dataset_path),
+                    'name': dataset_path.name
+                }
+                logger.info(f"Loaded dataset {dataset_id}: {df.shape}")
+        
+        if not datasets:
+            logger.error(f"No datasets found for report generation: {request.datasets}")
+            return
+        
+        # Initialize comprehensive data processor and other engines
+        from app.core.data_processor import ComprehensiveDataProcessor
+        from app.core.ai_insights_engine import AIInsightsEngine
+        from app.core.report_generator import ComprehensiveReportGenerator
+        
+        processor = ComprehensiveDataProcessor()
+        insights_engine = AIInsightsEngine()
+        report_generator = ComprehensiveReportGenerator()
+        
+        # Process each dataset
+        dataset_analyses = {}
+        for dataset_id, dataset_info in datasets.items():
+            df = dataset_info['dataframe']
+            
+            # Perform comprehensive analysis
+            analysis_results = processor.process_dataset(
+                df=df,
+                target_column=None,
+                dataset_name=dataset_id
+            )
+            
+            # Generate AI insights
+            ai_insights = insights_engine.generate_comprehensive_insights(
+                dataset_info=analysis_results['dataset_info'],
+                profiling_results=analysis_results['profiling'],
+                analysis_results=analysis_results,
+                model_results=None
+            )
+            
+            dataset_analyses[dataset_id] = {
+                'analysis_results': analysis_results,
+                'ai_insights': ai_insights,
+                'dataset_info': dataset_info
+            }
+        
+        # Generate comprehensive multi-dataset report
+        comprehensive_report = report_generator.generate_multi_dataset_report(
+            datasets_analysis=dataset_analyses,
+            report_config={
+                'title': request.title,
+                'description': request.description,
+                'sections': request.sections,
+                'format': request.format.value,
+                'include_visualizations': request.include_visualizations,
+                'include_recommendations': request.include_recommendations,
+                'custom_branding': request.custom_branding
+            }
+        )
+        
+        # Save report files
+        reports_folder = data_folder / "reports" / report_id
+        reports_folder.mkdir(parents=True, exist_ok=True)
+        
+        # Save HTML report
+        html_path = None
+        if comprehensive_report.get('html_content'):
+            html_path = reports_folder / f"{report_id}.html"
+            with open(html_path, 'w', encoding='utf-8') as f:
+                f.write(comprehensive_report['html_content'])
+            logger.info(f"HTML report saved: {html_path}")
+        
+        # Save PDF report if requested
+        pdf_path = None
+        if request.format in [ReportFormat.PDF, ReportFormat.BOTH] and comprehensive_report.get('pdf_content'):
+            pdf_path = reports_folder / f"{report_id}.pdf"
+            with open(pdf_path, 'wb') as f:
+                f.write(comprehensive_report['pdf_content'])
+            logger.info(f"PDF report saved: {pdf_path}")
+        
+        # Save JSON data
+        json_path = reports_folder / f"{report_id}_data.json"
+        report_data = {
+            'report_id': report_id,
+            'title': request.title,
+            'description': request.description,
+            'datasets': list(datasets.keys()),
+            'comprehensive_results': _make_report_serializable(comprehensive_report),
+            'datasets_analysis': _make_report_serializable(dataset_analyses),
+            'generation_config': {
+                'sections': request.sections,
+                'format': request.format.value,
+                'include_visualizations': request.include_visualizations,
+                'include_recommendations': request.include_recommendations
+            },
+            'execution_time': time.time() - start_time,
+            'generated_at': time.time(),
+            'status': 'completed'
+        }
+        
+        with open(json_path, 'w') as f:
+            json.dump(report_data, f, indent=2, default=str)
+        
+        # Update report status
+        status_data = {
+            'report_id': report_id,
+            'status': 'completed',
+            'progress': 100,
+            'execution_time': time.time() - start_time,
+            'file_paths': {
+                'html': str(html_path) if html_path else None,
+                'pdf': str(pdf_path) if pdf_path else None,
+                'data': str(json_path)
+            },
+            'file_sizes': {
+                'html': html_path.stat().st_size if html_path and html_path.exists() else 0,
+                'pdf': pdf_path.stat().st_size if pdf_path and pdf_path.exists() else 0,
+                'data': json_path.stat().st_size if json_path.exists() else 0
+            },
+            'completed_at': time.time(),
+            'insights_count': sum(len(analysis.get('ai_insights', {}).get('key_findings', [])) for analysis in dataset_analyses.values()),
+            'visualizations_count': comprehensive_report.get('visualizations_count', 0)
+        }
+        
+        status_path = reports_folder / "status.json"
+        with open(status_path, 'w') as f:
+            json.dump(status_data, f, indent=2)
+        
+        execution_time = time.time() - start_time
+        logger.info(f"Comprehensive report generation completed: {report_id} in {execution_time:.2f} seconds")
         
     except Exception as e:
-        logger.error(f"Error in background report generation {report_id}: {e}")
-        # TODO: Update database with error status
+        logger.error(f"Error in comprehensive background report generation {report_id}: {e}")
+        
+        # Save error status
+        try:
+            error_folder = Path("data/reports") / report_id
+            error_folder.mkdir(parents=True, exist_ok=True)
+            
+            error_status = {
+                'report_id': report_id,
+                'status': 'error',
+                'error_message': str(e),
+                'error_timestamp': time.time(),
+                'progress': 0
+            }
+            
+            error_file = error_folder / "status.json"
+            with open(error_file, 'w') as f:
+                json.dump(error_status, f, indent=2)
+        except Exception as save_error:
+            logger.error(f"Failed to save report error status: {save_error}")
+
+
+def _make_report_serializable(obj):
+    """Convert complex objects to JSON-serializable format for reports."""
+    import numpy as np
+    import pandas as pd
+    from datetime import datetime
+    
+    if isinstance(obj, dict):
+        return {key: _make_report_serializable(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [_make_report_serializable(item) for item in obj]
+    elif isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    elif pd.isna(obj):
+        return None
+    elif hasattr(obj, 'to_dict'):
+        return _make_report_serializable(obj.to_dict())
+    elif hasattr(obj, '__dict__'):
+        return _make_report_serializable(obj.__dict__)
+    else:
+        return obj
 
 
 async def generate_custom_report_content(report_id: str, request: CustomReportRequest):
@@ -543,12 +740,198 @@ async def generate_custom_report_content(report_id: str, request: CustomReportRe
         request: Custom report configuration
     """
     try:
-        logger.info(f"Starting custom report generation: {report_id}")
+        import time
+        import json
+        from pathlib import Path
+        import pandas as pd
         
-        # TODO: Implement custom report generation logic
+        start_time = time.time()
+        logger.info(f"Starting comprehensive custom report generation: {report_id}")
         
-        logger.info(f"Custom report generation completed: {report_id}")
+        # Find and load the dataset
+        dataset_path = None
+        data_folder = Path("data")
+        
+        for folder in ["uploads", "processed"]:
+            folder_path = data_folder / folder
+            if folder_path.exists():
+                for file_path in folder_path.glob(f"*{request.dataset_id}*"):
+                    if file_path.suffix in ['.csv', '.xlsx', '.parquet']:
+                        dataset_path = file_path
+                        break
+        
+        if not dataset_path:
+            logger.error(f"Dataset not found for custom report: {request.dataset_id}")
+            return
+        
+        # Load dataset
+        if dataset_path.suffix == '.csv':
+            df = pd.read_csv(dataset_path)
+        elif dataset_path.suffix == '.xlsx':
+            df = pd.read_excel(dataset_path)
+        elif dataset_path.suffix == '.parquet':
+            df = pd.read_parquet(dataset_path)
+        
+        logger.info(f"Dataset loaded for custom report: {df.shape}")
+        
+        # Initialize engines
+        from app.core.data_processor import ComprehensiveDataProcessor
+        from app.core.ai_insights_engine import AIInsightsEngine
+        from app.core.report_generator import ComprehensiveReportGenerator
+        
+        processor = ComprehensiveDataProcessor()
+        insights_engine = AIInsightsEngine()
+        report_generator = ComprehensiveReportGenerator()
+        
+        # Perform analysis if needed
+        analysis_results = None
+        ai_insights = None
+        
+        if request.include_analysis:
+            analysis_results = processor.process_dataset(
+                df=df,
+                target_column=None,
+                dataset_name=request.dataset_id
+            )
+            
+            ai_insights = insights_engine.generate_comprehensive_insights(
+                dataset_info=analysis_results['dataset_info'],
+                profiling_results=analysis_results['profiling'],
+                analysis_results=analysis_results,
+                model_results=None
+            )
+        
+        # Generate custom visualizations if requested
+        custom_visualizations = []
+        if request.visualizations:
+            for viz_config in request.visualizations:
+                viz_result = processor.generate_custom_visualization(
+                    df=df,
+                    chart_type=viz_config.get('chart_type', 'bar'),
+                    x_column=viz_config.get('x_column'),
+                    y_column=viz_config.get('y_column'),
+                    color_column=viz_config.get('color_column'),
+                    title=viz_config.get('title'),
+                    interactive=True,
+                    save_path=str(data_folder / "charts" / f"custom_{report_id}_{len(custom_visualizations)}")
+                )
+                
+                if viz_result.get('success'):
+                    custom_visualizations.append(viz_result)
+        
+        # Generate custom report
+        custom_report = report_generator.generate_custom_report(
+            dataset_info={
+                'dataframe': df,
+                'name': request.dataset_id,
+                'path': str(dataset_path)
+            },
+            analysis_results=analysis_results,
+            ai_insights=ai_insights,
+            custom_config={
+                'title': request.title,
+                'description': request.description,
+                'sections': request.sections,
+                'template': request.template,
+                'custom_content': request.custom_content,
+                'visualizations': custom_visualizations,
+                'include_analysis': request.include_analysis,
+                'custom_branding': request.custom_branding
+            }
+        )
+        
+        # Save custom report files
+        reports_folder = data_folder / "reports" / report_id
+        reports_folder.mkdir(parents=True, exist_ok=True)
+        
+        # Save HTML report
+        html_path = None
+        if custom_report.get('html_content'):
+            html_path = reports_folder / f"{report_id}_custom.html"
+            with open(html_path, 'w', encoding='utf-8') as f:
+                f.write(custom_report['html_content'])
+            logger.info(f"Custom HTML report saved: {html_path}")
+        
+        # Save PDF if requested
+        pdf_path = None
+        if custom_report.get('pdf_content'):
+            pdf_path = reports_folder / f"{report_id}_custom.pdf"
+            with open(pdf_path, 'wb') as f:
+                f.write(custom_report['pdf_content'])
+            logger.info(f"Custom PDF report saved: {pdf_path}")
+        
+        # Save custom report metadata
+        execution_time = time.time() - start_time
+        custom_metadata = {
+            'report_id': report_id,
+            'title': request.title,
+            'description': request.description,
+            'dataset_id': request.dataset_id,
+            'dataset_path': str(dataset_path),
+            'custom_config': {
+                'sections': request.sections,
+                'template': request.template,
+                'include_analysis': request.include_analysis,
+                'visualizations_count': len(custom_visualizations)
+            },
+            'analysis_included': analysis_results is not None,
+            'insights_included': ai_insights is not None,
+            'execution_time': execution_time,
+            'generated_at': time.time(),
+            'status': 'completed'
+        }
+        
+        metadata_path = reports_folder / f"{report_id}_custom_metadata.json"
+        with open(metadata_path, 'w') as f:
+            json.dump(_make_report_serializable(custom_metadata), f, indent=2, default=str)
+        
+        # Update status
+        status_data = {
+            'report_id': report_id,
+            'type': 'custom',
+            'status': 'completed',
+            'progress': 100,
+            'execution_time': execution_time,
+            'file_paths': {
+                'html': str(html_path) if html_path else None,
+                'pdf': str(pdf_path) if pdf_path else None,
+                'metadata': str(metadata_path)
+            },
+            'file_sizes': {
+                'html': html_path.stat().st_size if html_path and html_path.exists() else 0,
+                'pdf': pdf_path.stat().st_size if pdf_path and pdf_path.exists() else 0,
+                'metadata': metadata_path.stat().st_size if metadata_path.exists() else 0
+            },
+            'completed_at': time.time(),
+            'custom_sections_count': len(request.sections),
+            'visualizations_count': len(custom_visualizations)
+        }
+        
+        status_path = reports_folder / "status.json"
+        with open(status_path, 'w') as f:
+            json.dump(status_data, f, indent=2)
+        
+        logger.info(f"Custom report generation completed: {report_id} in {execution_time:.2f} seconds")
         
     except Exception as e:
-        logger.error(f"Error in custom report generation {report_id}: {e}")
-        # TODO: Update database with error status
+        logger.error(f"Error in comprehensive custom report generation {report_id}: {e}")
+        
+        # Save error status
+        try:
+            error_folder = Path("data/reports") / report_id
+            error_folder.mkdir(parents=True, exist_ok=True)
+            
+            error_status = {
+                'report_id': report_id,
+                'type': 'custom',
+                'status': 'error',
+                'error_message': str(e),
+                'error_timestamp': time.time(),
+                'progress': 0
+            }
+            
+            error_file = error_folder / "status.json"
+            with open(error_file, 'w') as f:
+                json.dump(error_status, f, indent=2)
+        except Exception as save_error:
+            logger.error(f"Failed to save custom report error status: {save_error}")

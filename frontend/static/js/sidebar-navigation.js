@@ -103,6 +103,12 @@ class SidebarNavigation {
             content: this.getAnalysisContent()
         });
 
+        this.contentSections.set('ai-chat', {
+            title: 'AI Assistant',
+            subtitle: 'Chat with AI about your data and get insights',
+            content: this.getAIChatContent()
+        });
+
         this.contentSections.set('ai-lab', {
             title: 'AI Lab',
             subtitle: 'Advanced machine learning and AI tools',
@@ -610,6 +616,239 @@ class SidebarNavigation {
                     </div>
                 </div>
             </div>
+        `;
+    }
+
+    getAIChatContent() {
+        // Return AI chat interface HTML content
+        return `
+            <!-- AI Chat Assistant Section -->
+            <div class="ai-chat-section">
+                <div class="section-header">
+                    <h1>
+                        <i class="fas fa-comments"></i>
+                        AI Data Assistant
+                    </h1>
+                    <p>Ask questions about your data and get intelligent insights through natural language</p>
+                </div>
+                
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="chat-status">
+                            <div class="status-indicator">
+                                <div class="status-dot online"></div>
+                                <span class="status-text">AI Assistant Online</span>
+                            </div>
+                            <div class="chat-info">
+                                <span class="session-id" id="chat-session-id">New Session</span>
+                            </div>
+                        </div>
+                        <div class="chat-controls">
+                            <button class="btn btn-outline" onclick="clearChatHistory()" title="Clear History">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn btn-outline" onclick="downloadChatHistory()" title="Export Chat">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-outline" onclick="toggleChatSettings()" title="Settings">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages-container">
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="welcome-message">
+                                <div class="message assistant-message">
+                                    <div class="message-avatar">
+                                        <div class="avatar-icon">
+                                            <i class="fas fa-robot"></i>
+                                        </div>
+                                    </div>
+                                    <div class="message-content">
+                                        <div class="message-bubble">
+                                            <div class="message-text">
+                                                <div class="welcome-content">
+                                                    <h3>👋 Welcome to NISR AI Assistant!</h3>
+                                                    <p>I'm here to help you analyze and understand your data. Here's what I can do:</p>
+                                                    <div class="capabilities-grid">
+                                                        <div class="capability-item">
+                                                            <i class="fas fa-search-plus"></i>
+                                                            <span>Query data using natural language</span>
+                                                        </div>
+                                                        <div class="capability-item">
+                                                            <i class="fas fa-chart-line"></i>
+                                                            <span>Generate insights and visualizations</span>
+                                                        </div>
+                                                        <div class="capability-item">
+                                                            <i class="fas fa-lightbulb"></i>
+                                                            <span>Provide data analysis recommendations</span>
+                                                        </div>
+                                                        <div class="capability-item">
+                                                            <i class="fas fa-brain"></i>
+                                                            <span>Explain complex patterns and trends</span>
+                                                        </div>
+                                                    </div>
+                                                    <p><strong>Get started:</strong> Select a dataset below and ask me anything!</p>
+                                                </div>
+                                            </div>
+                                            <div class="message-time" id="welcome-time">Just now</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-typing" id="chat-typing" style="display: none;">
+                            <div class="message assistant-message typing">
+                                <div class="message-avatar">
+                                    <div class="avatar-icon">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-bubble">
+                                        <div class="typing-indicator">
+                                            <div class="typing-dots">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <span class="typing-text">AI Assistant is thinking...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-suggestions" id="chat-suggestions">
+                        <div class="suggestions-container">
+                            <div class="suggestions-header">
+                                <span class="suggestions-label">
+                                    <i class="fas fa-magic"></i>
+                                    Quick questions:
+                                </span>
+                            </div>
+                            <div class="suggestions-list">
+                                <button class="suggestion-btn" onclick="sendQuickMessage('What datasets are available?')">
+                                    <i class="fas fa-database"></i>
+                                    What datasets are available?
+                                </button>
+                                <button class="suggestion-btn" onclick="sendQuickMessage('Show me a data summary')">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Show me a data summary
+                                </button>
+                                <button class="suggestion-btn" onclick="sendQuickMessage('Generate visualizations')">
+                                    <i class="fas fa-chart-area"></i>
+                                    Generate visualizations
+                                </button>
+                                <button class="suggestion-btn" onclick="sendQuickMessage('Find data correlations')">
+                                    <i class="fas fa-project-diagram"></i>
+                                    Find data correlations
+                                </button>
+                                <button class="suggestion-btn" onclick="sendQuickMessage('Detect outliers and anomalies')">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Detect outliers
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <div class="dataset-selector-container">
+                            <div class="dataset-selector">
+                                <label class="selector-label">
+                                    <i class="fas fa-database"></i>
+                                    Active Dataset:
+                                </label>
+                                <select id="chat-dataset-select" onchange="updateChatContext()" class="dataset-select">
+                                    <option value="">Select a dataset...</option>
+                                </select>
+                                <button class="btn btn-outline btn-sm" onclick="refreshDatasets()">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <div class="input-wrapper">
+                                <div class="input-actions">
+                                    <button class="input-action-btn" onclick="attachFile()" title="Attach File">
+                                        <i class="fas fa-paperclip"></i>
+                                    </button>
+                                    <button class="input-action-btn" onclick="toggleVoiceInput()" title="Voice Input">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                </div>
+                                
+                                <textarea 
+                                    id="chat-input" 
+                                    placeholder="Ask me anything about your data..." 
+                                    rows="1"
+                                    onkeydown="handleChatKeyDown(event)"
+                                    oninput="autoResizeChatInput(this)"
+                                    class="chat-textarea"
+                                ></textarea>
+                                
+                                <button class="send-btn" onclick="sendChatMessage()" id="send-btn" disabled>
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Settings Panel -->
+                <div class="chat-settings-panel" id="chat-settings" style="display: none;">
+                    <div class="settings-header">
+                        <h3>Chat Settings</h3>
+                        <button class="close-btn" onclick="toggleChatSettings()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="settings-content">
+                        <div class="setting-group">
+                            <label class="setting-label">Response Style</label>
+                            <select class="setting-select" id="response-style">
+                                <option value="detailed">Detailed explanations</option>
+                                <option value="concise" selected>Concise answers</option>
+                                <option value="technical">Technical details</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Auto-generate visualizations</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="auto-visualizations" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Show suggestions</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="show-suggestions" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                // Initialize chat interface when this section loads
+                if (!window.chatInterface) {
+                    // Load chat interface script if not already loaded
+                    const script = document.createElement('script');
+                    script.src = '/static/js/chat-interface.js';
+                    script.onload = () => {
+                        window.chatInterface = new ChatInterface();
+                    };
+                    document.head.appendChild(script);
+                } else {
+                    // Reinitialize if already loaded
+                    window.chatInterface = new ChatInterface();
+                }
+            </script>
         `;
     }
 

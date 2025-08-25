@@ -31,16 +31,25 @@ async def lifespan(app: FastAPI):
     
     # Initialize database
     try:
-        # Database initialization will be added here
-        logger.info("Database initialized successfully")
+        # Initialize MongoDB
+        from app.database import init_database
+        await init_database()
+        logger.info("MongoDB initialized successfully")
     except Exception as e:
-        logger.error(f"Failed to initialize database: {e}")
-        raise
+        logger.error(f"Failed to initialize MongoDB: {e}")
+        logger.warning("Continuing without database connection...")
+        # Don't raise - allow app to start without DB for development
     
     yield
     
     # Shutdown
     logger.info("Shutting down Auto Analytics Platform...")
+    try:
+        from app.database import close_database
+        await close_database()
+        logger.info("Database connections closed")
+    except Exception as e:
+        logger.error(f"Error closing database connections: {e}")
 
 
 # Initialize FastAPI application
@@ -377,7 +386,7 @@ async def send_periodic_updates(websocket: WebSocket):
 
 # Import and include API routers
 try:
-    from app.api import upload, datasets, analysis, modeling, visualization, reports
+    from app.api import upload, datasets, analysis, modeling, visualization, reports, chat, dashboard, user
     
     app.include_router(upload.router, prefix="/api/v1", tags=["upload"])
     app.include_router(datasets.router, prefix="/api/v1", tags=["datasets"])
@@ -385,6 +394,9 @@ try:
     app.include_router(modeling.router, prefix="/api/v1", tags=["modeling"])
     app.include_router(visualization.router, prefix="/api/v1", tags=["visualization"])
     app.include_router(reports.router, prefix="/api/v1", tags=["reports"])
+    app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
+    app.include_router(dashboard.router, prefix="/api/v1", tags=["dashboard"])
+    app.include_router(user.router, prefix="/api/v1", tags=["user"])
     
     logger.info("All API routers loaded successfully")
     

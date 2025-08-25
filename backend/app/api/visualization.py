@@ -41,19 +41,67 @@ async def generate_visualization(
         Visualization information and file path
     """
     try:
+        from pathlib import Path
+        import pandas as pd
+        
         logger.info(f"Generating {chart_type} visualization for dataset: {dataset_id}")
         
-        # TODO: Implement actual visualization generation
-        # This would include:
-        # - Loading dataset
-        # - Validating columns exist
-        # - Generating appropriate chart using plotly/matplotlib
-        # - Saving chart as image/HTML
-        # - Returning file information
+        # Find and load the dataset
+        dataset_path = None
+        data_folder = Path("data")
         
-        # For now, return sample response
+        for folder in ["uploads", "processed"]:
+            folder_path = data_folder / folder
+            if folder_path.exists():
+                for file_path in folder_path.glob(f"*{dataset_id}*"):
+                    if file_path.suffix in ['.csv', '.xlsx', '.parquet']:
+                        dataset_path = file_path
+                        break
+        
+        if not dataset_path:
+            raise HTTPException(status_code=404, detail=f"Dataset {dataset_id} not found")
+        
+        # Load dataset
+        if dataset_path.suffix == '.csv':
+            df = pd.read_csv(dataset_path)
+        elif dataset_path.suffix == '.xlsx':
+            df = pd.read_excel(dataset_path)
+        elif dataset_path.suffix == '.parquet':
+            df = pd.read_parquet(dataset_path)
+        
+        # Validate columns exist
+        if x_column and x_column not in df.columns:
+            raise HTTPException(status_code=400, detail=f"Column '{x_column}' not found in dataset")
+        if y_column and y_column not in df.columns:
+            raise HTTPException(status_code=400, detail=f"Column '{y_column}' not found in dataset")
+        if color_column and color_column not in df.columns:
+            raise HTTPException(status_code=400, detail=f"Column '{color_column}' not found in dataset")
+        
+        # Use comprehensive data processor for visualization
+        from app.core.data_processor import ComprehensiveDataProcessor
+        processor = ComprehensiveDataProcessor()
+        
+        # Generate visualization using the processor
         chart_id = f"chart_{dataset_id}_{int(datetime.now().timestamp())}"
-        file_path = f"data/charts/{chart_id}.html" if interactive else f"data/charts/{chart_id}.png"
+        
+        visualization_result = processor.generate_custom_visualization(
+            df=df,
+            chart_type=chart_type,
+            x_column=x_column,
+            y_column=y_column,
+            color_column=color_column,
+            title=title,
+            width=width,
+            height=height,
+            interactive=interactive,
+            save_path=str(data_folder / "charts" / f"{chart_id}")
+        )
+        
+        if not visualization_result.get('success'):
+            raise HTTPException(status_code=500, detail=visualization_result.get('error', 'Visualization generation failed'))
+        
+        file_path = visualization_result['file_path']
+        actual_file_size = Path(file_path).stat().st_size if Path(file_path).exists() else 0
         
         return {
             "chart_id": chart_id,
@@ -67,10 +115,12 @@ async def generate_visualization(
                 "y_column": y_column,
                 "color_column": color_column
             },
-            "title": title or f"{chart_type.title()} Chart",
+            "title": visualization_result.get('title', title or f"{chart_type.title()} Chart"),
             "generated_at": datetime.now(),
-            "file_size": 245760,  # Sample file size
-            "status": "completed"
+            "file_size": actual_file_size,
+            "status": "completed",
+            "chart_data": visualization_result.get('chart_data', {}),
+            "chart_config": visualization_result.get('chart_config', {})
         }
         
     except Exception as e:
@@ -89,55 +139,73 @@ async def auto_generate_visualizations(dataset_id: str):
         List of generated visualizations
     """
     try:
+        from pathlib import Path
+        import pandas as pd
+        
         logger.info(f"Auto-generating visualizations for dataset: {dataset_id}")
         
-        # TODO: Implement intelligent chart selection
-        # This would include:
-        # - Analyzing data types and distributions
-        # - Selecting appropriate chart types
-        # - Generating multiple relevant visualizations
-        # - Detecting correlations and relationships
+        # Find and load the dataset
+        dataset_path = None
+        data_folder = Path("data")
         
-        # For now, return sample visualizations
-        visualizations = [
-            {
-                "chart_id": f"auto_chart_1_{int(datetime.now().timestamp())}",
-                "chart_type": "histogram",
-                "title": "Distribution of Sales Amount",
-                "description": "Shows the distribution of sales values",
-                "columns": ["sales_amount"],
-                "file_path": "data/charts/auto_chart_1.html",
-                "importance": "high",
-                "insights": ["Data shows normal distribution with slight right skew"]
-            },
-            {
-                "chart_id": f"auto_chart_2_{int(datetime.now().timestamp())}",
-                "chart_type": "correlation_heatmap",
-                "title": "Feature Correlation Matrix",
-                "description": "Correlation between numerical features",
-                "columns": ["sales_amount", "price", "quantity"],
-                "file_path": "data/charts/auto_chart_2.html",
-                "importance": "high",
-                "insights": ["Strong positive correlation between price and sales amount"]
-            },
-            {
-                "chart_id": f"auto_chart_3_{int(datetime.now().timestamp())}",
-                "chart_type": "box_plot",
-                "title": "Sales Distribution by Category",
-                "description": "Box plot showing sales distribution across product categories",
-                "columns": ["sales_amount", "category"],
-                "file_path": "data/charts/auto_chart_3.html",
-                "importance": "medium",
-                "insights": ["Electronics category shows highest median sales"]
+        for folder in ["uploads", "processed"]:
+            folder_path = data_folder / folder
+            if folder_path.exists():
+                for file_path in folder_path.glob(f"*{dataset_id}*"):
+                    if file_path.suffix in ['.csv', '.xlsx', '.parquet']:
+                        dataset_path = file_path
+                        break
+        
+        if not dataset_path:
+            raise HTTPException(status_code=404, detail=f"Dataset {dataset_id} not found")
+        
+        # Load dataset
+        if dataset_path.suffix == '.csv':
+            df = pd.read_csv(dataset_path)
+        elif dataset_path.suffix == '.xlsx':
+            df = pd.read_excel(dataset_path)
+        elif dataset_path.suffix == '.parquet':
+            df = pd.read_parquet(dataset_path)
+        
+        # Use comprehensive data processor for auto-visualization
+        from app.core.data_processor import ComprehensiveDataProcessor
+        processor = ComprehensiveDataProcessor()
+        
+        # Generate automatic visualizations based on data analysis
+        auto_viz_results = processor.generate_automatic_visualizations(
+            df=df,
+            dataset_name=dataset_id,
+            save_folder=str(data_folder / "charts" / f"auto_{dataset_id}")
+        )
+        
+        if not auto_viz_results.get('success'):
+            raise HTTPException(status_code=500, detail=auto_viz_results.get('error', 'Auto-visualization generation failed'))
+        
+        visualizations = []
+        for viz in auto_viz_results.get('visualizations', []):
+            chart_info = {
+                "chart_id": viz.get('chart_id'),
+                "chart_type": viz.get('chart_type'),
+                "title": viz.get('title'),
+                "description": viz.get('description'),
+                "columns": viz.get('columns', []),
+                "file_path": viz.get('file_path'),
+                "importance": viz.get('importance', 'medium'),
+                "insights": viz.get('insights', []),
+                "relevance_score": viz.get('relevance_score', 0.5),
+                "file_size": Path(viz['file_path']).stat().st_size if Path(viz['file_path']).exists() else 0
             }
-        ]
+            visualizations.append(chart_info)
         
         return {
             "dataset_id": dataset_id,
             "total_visualizations": len(visualizations),
             "visualizations": visualizations,
             "generated_at": datetime.now(),
-            "status": "completed"
+            "status": "completed",
+            "generation_time": auto_viz_results.get('generation_time', 0),
+            "data_analysis": auto_viz_results.get('data_analysis', {}),
+            "recommendations": auto_viz_results.get('recommendations', [])
         }
         
     except Exception as e:

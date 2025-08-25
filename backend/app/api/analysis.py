@@ -352,17 +352,197 @@ async def perform_data_analysis(analysis_id: str, request: DataAnalysisRequest):
         request: Analysis configuration
     """
     try:
-        logger.info(f"Starting background analysis: {analysis_id}")
+        import time
+        import json
+        from pathlib import Path
+        import pandas as pd
         
-        # TODO: Implement actual analysis logic
-        # This would include:
-        # - Loading the dataset
-        # - Performing requested analyses
-        # - Generating insights and recommendations
-        # - Saving results to database
+        start_time = time.time()
+        logger.info(f"Starting comprehensive background analysis: {analysis_id}")
         
-        logger.info(f"Analysis completed: {analysis_id}")
+        # Find and load the dataset
+        dataset_path = None
+        data_folder = Path("data")
+        
+        # Search for dataset files
+        for folder in ["uploads", "processed"]:
+            folder_path = data_folder / folder
+            if folder_path.exists():
+                for file_path in folder_path.glob(f"*{request.dataset_id}*"):
+                    if file_path.suffix in ['.csv', '.xlsx', '.parquet']:
+                        dataset_path = file_path
+                        break
+        
+        if not dataset_path:
+            logger.error(f"Dataset not found for analysis: {request.dataset_id}")
+            return
+        
+        # Load dataset
+        if dataset_path.suffix == '.csv':
+            df = pd.read_csv(dataset_path)
+        elif dataset_path.suffix == '.xlsx':
+            df = pd.read_excel(dataset_path)
+        elif dataset_path.suffix == '.parquet':
+            df = pd.read_parquet(dataset_path)
+        else:
+            logger.error(f"Unsupported file format: {dataset_path.suffix}")
+            return
+        
+        logger.info(f"Dataset loaded: {df.shape}")
+        
+        # Initialize comprehensive data processor
+        from app.core.data_processor import ComprehensiveDataProcessor
+        processor = ComprehensiveDataProcessor()
+        
+        # Perform comprehensive analysis
+        processing_results = processor.process_dataset(
+            df=df,
+            target_column=request.target_column,
+            dataset_name=request.dataset_id
+        )
+        
+        # Initialize AI insights engine
+        from app.core.ai_insights_engine import AIInsightsEngine
+        insights_engine = AIInsightsEngine()
+        
+        # Generate comprehensive insights
+        ai_insights = insights_engine.generate_comprehensive_insights(
+            dataset_info=processing_results['dataset_info'],
+            profiling_results=processing_results['profiling'],
+            analysis_results=processing_results,
+            model_results=None
+        )
+        
+        # Perform AutoML analysis if target column is specified
+        model_results = None
+        if request.target_column and request.target_column in df.columns:
+            from app.core.automl_engine import AutoMLEngine
+            automl_engine = AutoMLEngine()
+            
+            try:
+                model_results = automl_engine.train_best_model(
+                    df=df,
+                    target_column=request.target_column,
+                    problem_type='auto'  # Auto-detect classification or regression
+                )
+                logger.info(f"AutoML completed. Best model: {model_results.get('best_model_name', 'Unknown')}")
+            except Exception as e:
+                logger.warning(f"AutoML failed: {e}")
+        
+        # Generate comprehensive report
+        from app.core.report_generator import ComprehensiveReportGenerator
+        report_generator = ComprehensiveReportGenerator()
+        
+        report_data = report_generator.generate_comprehensive_report(
+            dataset_info=processing_results['dataset_info'],
+            profiling_results=processing_results['profiling'],
+            eda_results=processing_results.get('eda', {}),
+            model_results=model_results,
+            ai_insights=ai_insights
+        )
+        
+        # Save analysis results
+        results_folder = data_folder / "reports" / analysis_id
+        results_folder.mkdir(parents=True, exist_ok=True)
+        
+        # Save detailed analysis results
+        analysis_results = {
+            'analysis_id': analysis_id,
+            'dataset_id': request.dataset_id,
+            'dataset_path': str(dataset_path),
+            'analysis_types': request.analysis_types,
+            'target_column': request.target_column,
+            'processing_results': _make_serializable(processing_results),
+            'ai_insights': _make_serializable(ai_insights),
+            'model_results': _make_serializable(model_results) if model_results else None,
+            'report_data': _make_serializable(report_data),
+            'execution_time': time.time() - start_time,
+            'completed_at': time.time(),
+            'status': 'completed'
+        }
+        
+        # Save to JSON file
+        results_file = results_folder / "analysis_results.json"
+        with open(results_file, 'w') as f:
+            json.dump(analysis_results, f, indent=2, default=str)
+        
+        # Generate and save HTML report if requested
+        if report_data.get('html_content'):
+            html_file = results_folder / "analysis_report.html"
+            with open(html_file, 'w', encoding='utf-8') as f:
+                f.write(report_data['html_content'])
+            logger.info(f"HTML report saved: {html_file}")
+        
+        # Generate and save PDF report if requested
+        if report_data.get('pdf_path'):
+            logger.info(f"PDF report saved: {report_data['pdf_path']}")
+        
+        execution_time = time.time() - start_time
+        logger.info(f"Comprehensive analysis completed: {analysis_id} in {execution_time:.2f} seconds")
+        
+        # Update analysis status (this would normally be in a database)
+        status_file = results_folder / "status.json"
+        status_data = {
+            'analysis_id': analysis_id,
+            'status': 'completed',
+            'progress': 100,
+            'execution_time': execution_time,
+            'completed_at': time.time(),
+            'results_available': True,
+            'insights_count': len(ai_insights.get('key_findings', [])),
+            'recommendations_count': len(ai_insights.get('recommendations', [])),
+            'quality_score': processing_results.get('profiling', {}).get('overview', {}).get('quality_score', 0)
+        }
+        
+        with open(status_file, 'w') as f:
+            json.dump(status_data, f, indent=2)
         
     except Exception as e:
-        logger.error(f"Error in background analysis {analysis_id}: {e}")
-        # TODO: Update database with error status
+        logger.error(f"Error in comprehensive background analysis {analysis_id}: {e}")
+        
+        # Save error status
+        try:
+            error_folder = Path("data/reports") / analysis_id
+            error_folder.mkdir(parents=True, exist_ok=True)
+            
+            error_status = {
+                'analysis_id': analysis_id,
+                'status': 'error',
+                'error_message': str(e),
+                'error_timestamp': time.time(),
+                'progress': 0
+            }
+            
+            error_file = error_folder / "status.json"
+            with open(error_file, 'w') as f:
+                json.dump(error_status, f, indent=2)
+        except Exception as save_error:
+            logger.error(f"Failed to save error status: {save_error}")
+
+
+def _make_serializable(obj):
+    """Convert complex objects to JSON-serializable format."""
+    import numpy as np
+    import pandas as pd
+    from datetime import datetime
+    
+    if isinstance(obj, dict):
+        return {key: _make_serializable(value) for key, value in obj.items()}
+    elif isinstance(obj, list):
+        return [_make_serializable(item) for item in obj]
+    elif isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    elif pd.isna(obj):
+        return None
+    elif hasattr(obj, 'to_dict'):
+        return _make_serializable(obj.to_dict())
+    elif hasattr(obj, '__dict__'):
+        return _make_serializable(obj.__dict__)
+    else:
+        return obj
